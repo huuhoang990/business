@@ -85,7 +85,7 @@ const MainLayout = () => {
                       <p className="m-0">Already have an account?</p>
                       <a className="ms-lg-1" href="login.html">Login</a>
                     </div>
-                  </div>
+                  </div> 
                 </form>
               </div>
             </div>
