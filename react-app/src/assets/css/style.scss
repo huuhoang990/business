@@ -13,8 +13,14 @@ html, body {
   background: linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1));
 }
 
-#content {
+#content-two-col {
   width: 768px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+#content-one-col {
+  width: 384px;
   margin: 0 auto;
   min-height: 100vh;
 }

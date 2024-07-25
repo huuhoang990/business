@@ -71,7 +71,7 @@ const MainLayout = () => {
                         <div className="col-6">
                           <div className="form-outline">
                             <label className="form-label select-label">City</label>
-                            <select className="select form-control form-control-lg w-100">
+                            <select className="select form-select form-select-lg">
                               <option value="1" disabled>Choose option</option>
                               <option value="2">Subject 1</option>
                               <option value="3">Subject 2</option>
@@ -82,7 +82,7 @@ const MainLayout = () => {
                         <div className="col-6">
                           <div className="form-outline">
                             <label className="form-label select-label">District</label>
-                            <select className="select form-control form-control-lg w-100">
+                            <select className="select form-select form-select-lg">
                               <option value="1" disabled>Choose option</option>
                               <option value="2">Subject 1</option>
                               <option value="3">Subject 2</option>
@@ -95,7 +95,7 @@ const MainLayout = () => {
                         <div className="col-6">
                           <div className="form-outline">
                             <label className="form-label select-label">Ward</label>
-                            <select className="select form-control form-control-lg w-100">
+                            <select className="select form-select form-select-lg">
                               <option value="1" disabled>Choose option</option>
                               <option value="2">Subject 1</option>
                               <option value="3">Subject 2</option>
@@ -108,7 +108,7 @@ const MainLayout = () => {
                         <div className="col-12">
                           <div className="form-outline">
                             <label className="form-label" htmlFor="phoneNumber">Street</label>
-                            <input type="tel" id="street" className="form-control form-control-lg" />
+                            <input type="text" id="street" className="form-control form-control-lg" />
                           </div>
                         </div>
                       </div>
@@ -124,6 +124,7 @@ const MainLayout = () => {
                 </div>
               </div>
             </div>
+            <Outlet></Outlet>
           </div>
       </div>
     </div>
