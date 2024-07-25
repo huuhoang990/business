@@ -8,7 +8,7 @@ import Login from '@/Pages/Login'
 export const router = createBrowserRouter([
   {
     path: '/register',
-    element: <TwoColumnContentLayout></TwoColumnContentLayout>,
+    element: <TwoColumnContentLayout></TwoColumnContentLayout>, 
     children: [
       {
         index: true,
