@@ -4,12 +4,15 @@ import "react-toastify/ReactToastify.min.css"
 import '@/assets/css/style.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { ToastContainer } from "react-toastify"
+import { UserProvider } from './Context/userAuth'
 
 function App() {
   return (
       <>
-        <RouterProvider router={router} />
-        <ToastContainer />
+        <UserProvider>
+          <RouterProvider router={router} />
+          <ToastContainer />
+        </UserProvider>
       </>
   )
 }
