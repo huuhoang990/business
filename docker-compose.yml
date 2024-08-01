@@ -22,7 +22,7 @@ services:
             MYSQL_USER: db_user
             MYSQL_PASSWORD: secret
         ports:
-            - 3309:3309
+            - 3306:3306
         volumes:
             - mysql_data:/var/lib/mysql # named volume for MySQL data
 
