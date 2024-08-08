@@ -1,4 +1,4 @@
-import { UserProfile } from "@/Models/User"
+import { UserProfile } from "@/Types/User"
 import { loginApi, registerApi } from "@/Service/AuthService"
 import axios from "axios"
 import React, { createContext, useEffect, useState } from "react"
