@@ -34,7 +34,7 @@ INSERT INTO provinces(id,name,name_en,full_name,full_name_en,code_name,administr
 ('04','Cao Bằng','Cao Bang','Tỉnh Cao Bằng','Cao Bang Province','cao_bang',2),
 ('06','Bắc Kạn','Bac Kan','Tỉnh Bắc Kạn','Bac Kan Province','bac_kan',2),
 ('08','Tuyên Quang','Tuyen Quang','Tỉnh Tuyên Quang','Tuyen Quang Province','tuyen_quang',2),
-('10','Lào Cai','Lao Cai','Tỉnh Lào Cai','Lao Cai Province','lao_cai',2,2),
+('10','Lào Cai','Lao Cai','Tỉnh Lào Cai','Lao Cai Province','lao_cai',2),
 ('11','Điện Biên','Dien Bien','Tỉnh Điện Biên','Dien Bien Province','dien_bien',2),
 ('12','Lai Châu','Lai Chau','Tỉnh Lai Châu','Lai Chau Province','lai_chau',2),
 ('14','Sơn La','Son La','Tỉnh Sơn La','Son La Province','son_la',2),
@@ -97,7 +97,7 @@ INSERT INTO provinces(id,name,name_en,full_name,full_name_en,code_name,administr
 
 -- ----------------------------------
 
--- DATA for districts --
+-- -- DATA for districts --
 INSERT INTO districts(id,name,name_en,full_name,full_name_en,code_name,province_code,administrative_unit_id) VALUES
 ('001','Ba Đình','Ba Dinh','Quận Ba Đình','Ba Dinh District','ba_dinh','01',5),
 ('002','Hoàn Kiếm','Hoan Kiem','Quận Hoàn Kiếm','Hoan Kiem District','hoan_kiem','01',5),
