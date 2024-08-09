@@ -1,4 +1,4 @@
-import { UserProfile } from "@/Models/User"
+import { UserProfile } from "@/Types/User"
 import { loginApi, registerApi } from "@/Service/AuthService"
 import axios from "axios"
 import React, { createContext, useEffect, useState } from "react"
@@ -32,8 +32,9 @@ export const UserProvider = ({ children }: Props) => {
       setUser(JSON.parse(user))
       setToken(token)
       axios.defaults.headers.common["Authorization"] = "Bearer " + token
-      setIsReady(true)
     }
+
+    setIsReady(true)
   }, [])
 
   const registerUser = async (

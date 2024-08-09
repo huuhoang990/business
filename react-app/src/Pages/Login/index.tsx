@@ -1,26 +1,22 @@
 import { useAuth } from "@/Context/userAuth";
-import { useForm, Resolver } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { LoginForm } from "@/Types/Forms/LoginForm"
 import * as Yup from "yup"
 
 type Props = {}
 
-type LoginFormsInputs = {
-  userName: string
-  password: string
-}
-
 const validation = Yup.object().shape({
-  userName: Yup.string().required("Username is required"),
+  email: Yup.string().required("Email is required"),
   password: Yup.string().required("Password is required")
 })
 
 const Login = (props: Props) => {
   const { loginUser } = useAuth();
-  const { register, handleSubmit, formState: { errors }} = useForm<LoginFormsInputs>({ resolver: yupResolver(validation) })
+  const { register, handleSubmit, formState: { errors, isValid }} = useForm<LoginForm>({ resolver: yupResolver(validation) })
 
-  const handleLogin = (form: LoginFormsInputs) => {
-    loginUser(form.userName, form.password)
+  const handleLogin = (form: LoginForm) => {
+    loginUser(form.email, form.password)
   }
 
   return (
@@ -30,7 +26,10 @@ const Login = (props: Props) => {
           <div className="card">
             <div className="card-body p-4 p-md-5">
               <h3 className="mb-4 pb-2 pb-md-0 mb-md-5">Login</h3>
-              <form onSubmit={ handleSubmit(handleLogin) }>
+              <form
+                onSubmit={ handleSubmit(handleLogin) }
+                className={`needs-validation ${isValid ? 'was-validated' : ''}`}
+                noValidate>
                 <div className="row mt-4">
                   <div className="col-12">
                     <div className="form-outline">
@@ -39,9 +38,9 @@ const Login = (props: Props) => {
                         type="text"
                         id="userName"
                         className="form-control form-control-lg"
-                        {...register("userName")}
+                        {...register("email")}
                       />
-                      { errors.userName ? <p>{ errors.userName.message }</p> : "" }
+                      { errors.email ? <p className="invalid-feedback">{ errors.email.message }</p> : "" }
                     </div>
                   </div>
                 </div>

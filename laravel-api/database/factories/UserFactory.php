@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    protected static ?string $password;
+    protected static ?string $password = '123456';
 
     /**
      * Define the model's default state.
