@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,22 +21,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 */
 /*
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get(
-        'profile',
-        [
-            AuthController::class,
-            Route::get('profile', [AuthController::class, 'profile'])
-        ]
-    );
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => 'user'
+], function () {
+    Route::get('profile', [UserController::class, 'profile']);
 });
 */
+
+Route::group(['middleware' => 'api', 'prefix' => 'user'], function () {
+    Route::get('profile', [UserController::class, 'profile']);
+});
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
-    Route::get('profile', [AuthController::class, 'profile']);
+    // Route::get('profile', [AuthController::class, 'profile']);
 
     /*
      * Route::group(['middleware' => 'auth:api'], function () {
