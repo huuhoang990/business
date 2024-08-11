@@ -1,7 +1,14 @@
 <?php
 
 use Illuminate\Support\Str;
-
+/*
+echo env('DB_HOST', '127.0.0.1');
+echo env('DB_PORT', '3306');
+echo env('DB_DATABASE', 'laravel_api_db');
+echo env('DB_USERNAME', 'db_user');
+echo env('DB_PASSWORD', 'secret');
+die();
+*/
 return [
 
     /*
