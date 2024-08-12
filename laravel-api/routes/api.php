@@ -15,22 +15,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-/*
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-*/
-/*
-Route::group([
-    'middleware' => 'auth:api',
-    'prefix' => 'user'
-], function () {
-    Route::get('profile', [UserController::class, 'profile']);
-});
-*/
 
 Route::group(['middleware' => 'api', 'prefix' => 'user'], function () {
     Route::get('profile', [UserController::class, 'profile']);
+    Route::post('register', [UserController::class, 'register']);
 });
 
 Route::group([
@@ -41,12 +29,6 @@ Route::group([
     // Route::get('profile', [AuthController::class, 'profile']);
 
     /*
-     * Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('profile', 'AuthController@profile');
-    });
-    Route::group(['middleware' => 'jwt.auth'], function () {
-        Route::get('user-info', 'UserController@getUserInfo');
-    });
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('profile', 'AuthController@profile');
