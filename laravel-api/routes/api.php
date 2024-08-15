@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,22 @@ Route::group([
     Route::group(['middleware' => 'jwt.auth'], function () {
         Route::get('user-info', 'UserController@getUserInfo');
     });
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('profile', 'AuthController@profile');
+    */
+});
+
+Route::group([
+    'middleware' => 'api',
+], function ($router) {
+    Route::get('province/{id}', [RegisterController::class, 'selectProvince']);
+    Route::get('provinces', [RegisterController::class, 'getAllProvinces']);
+    Route::get('district/{id}', [RegisterController::class, 'getDistByPCode']);
+    Route::get('districts', [RegisterController::class, 'getAllDistricts']);
+    Route::get('ward/{id}', [RegisterController::class, 'getWardByDCode']);
+    // Route::get('wards', [RegisterController::class, 'getAllProvinces']);
+    /*
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('profile', 'AuthController@profile');
