@@ -4,14 +4,14 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { LoginForm } from "@/Types/Forms/LoginForm"
 import * as Yup from "yup"
 
-type Props = {}
+// type Props = {}
 
 const validation = Yup.object().shape({
   email: Yup.string().required("Email is required"),
   password: Yup.string().required("Password is required")
 })
 
-const Login = (props: Props) => {
+const Login = () => {
   const { loginUser } = useAuth();
   const { register, handleSubmit, formState: { errors, isValid }} = useForm<LoginForm>({ resolver: yupResolver(validation) })
 

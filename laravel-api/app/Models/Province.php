@@ -14,6 +14,14 @@ class Province extends Model
         // Add other relevant fields here
     ];
 
+    // Disable auto-incrementing if your primary key is non-numeric
+    public $incrementing = false;
+
+    // Cast the 'id' as a string
+    protected $casts = [
+        'id' => 'string',
+    ];
+
     public function districts()
     {
         return $this->hasMany(District::class, 'province_code');

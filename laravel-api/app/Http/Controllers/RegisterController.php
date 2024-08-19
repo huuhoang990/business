@@ -2,10 +2,13 @@
 namespace App\Http\Controllers;
 use App\Models\Province;
 use App\Models\District;
+use App\Models\User;
+use App\Models\UserProfile;
 use App\Models\Ward;
 use Illuminate\Http\Request;
 use App\Rules\IdValidator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -13,14 +16,13 @@ class RegisterController extends Controller
     public function getAllProvinces()
     {
         // Specify the columns you want to retrieve
-        $columns = ['id', 'full_name', 'code_name'];
+        $columns = ['id', 'name_en AS name'];
 
         // Retrieve the province with the specified columns
         $provinces = Province::select($columns)->get();
 
         // Return provinces as a JSON response
         return response()->json([
-            'success' => true,
             'data' => $provinces
         ], 200)->header('Content-Type', "application/json;charset=UTF-8");
     }
@@ -125,4 +127,32 @@ class RegisterController extends Controller
         return response()->json($wards);
     }
 
+    public function register(Request $request) {
+        DB::beginTransaction();
+
+        try {
+            $user = User::create([
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            UserProfile::create([
+                'user_id' => $user->id,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'birthday' => $request->birthday,
+                'address' => $request->address,
+                'ward_id' => $request->ward_id,
+                'district_id' => $request->district_id,
+                'province_id' => $request->province_id,
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
+        }
+
+        return response()->json(['message' => 'Registration successful'], 201);
+    }
 }

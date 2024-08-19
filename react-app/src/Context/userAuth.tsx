@@ -1,5 +1,5 @@
 import { UserProfile } from "@/Types/User"
-import { loginApi, registerApi } from "@/Service/AuthService"
+import { loginApi/*, registerApi*/ } from "@/Service/AuthService"
 import axios from "axios"
 import React, { createContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -8,7 +8,7 @@ import { toast } from "react-toastify"
 type UserContextType = {
   user: UserProfile | null
   token: string | null
-  registerUser: (email: string, userName: string, password: string) => void
+  // registerUser: (email: string, userName: string, password: string) => void
   loginUser: (userName: string, password: string) => void
   logout: () => void
   isLoggedIn: () => boolean
@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: Props) => {
 
     setIsReady(true)
   }, [])
-
+/*
   const registerUser = async (
     email: string,
     userName: string,
@@ -57,7 +57,7 @@ export const UserProvider = ({ children }: Props) => {
       }
     }).catch(e => toast.warning("Server error occured"))
   }
-
+*/
   const loginUser = async (
     userName: string,
     password: string
@@ -75,7 +75,7 @@ export const UserProvider = ({ children }: Props) => {
         toast.success("Login Success!")
         navigate("/")
       }
-    }).catch(e => toast.warning("Server error occured"))
+    }).catch(() => toast.warning("Server error occured"))
   }
 
   const isLoggedIn = () => {
@@ -89,9 +89,9 @@ export const UserProvider = ({ children }: Props) => {
     setToken("")
     navigate("/")
   }
-
+  // loginUser, user, token, logout, isLoggedIn , registerUser
   return (
-    <UserContext.Provider value={{ loginUser, user, token, logout, isLoggedIn, registerUser }} >
+    <UserContext.Provider value={{ loginUser, user, token, logout, isLoggedIn }} >
       { isReady ? children : null }
     </UserContext.Provider>
   )
