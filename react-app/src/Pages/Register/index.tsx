@@ -39,7 +39,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, touchedFields },
   } = useForm<RegisterForm>({ resolver: yupResolver(validation) });
 
   const handleRegister = async (form: RegisterForm) => {
@@ -54,6 +54,21 @@ const Register = () => {
 
     fetchProvices()
   }, [])
+
+  const getValidOrInvalidClass = (fieldName: keyof RegisterForm) => {
+    if (touchedFields[fieldName]) {
+      if (errors[fieldName]) {
+        return 'is-invalid';
+      } else {
+        return 'is-valid';
+      }
+    }
+    return '';
+  };
+
+  const handleBlur = (fieldName: string) => {
+    trigger(fieldName);
+  };
 
   return (
     <div id="inner-content" className="my-5 w-100 justify-content-center align-self-center">
@@ -73,7 +88,8 @@ const Register = () => {
                       <input
                         type="text"
                         id="emailAddress"
-                        className={`form-control form-control-lg ${errors.email ? 'is-invalid' : 'is-valid'}`}
+                        onBlur={handleBlur('email')}
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('email')}`}
                         {...register("email")} />
                         { errors.email ? <p className="invalid-feedback">{ errors.email.message }</p> : "" }
                     </div>
