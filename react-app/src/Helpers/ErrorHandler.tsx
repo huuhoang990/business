@@ -4,6 +4,7 @@ import { toast } from "react-toastify"
 export const handleError = (error: any) => {
   if (axios.isAxiosError(error)) {
     var err = error.response
+    console.log(error)
     if (Array.isArray(err?.data.errors)) {
       for (let val of err.data.errors) {
         toast.warning(val.description)
@@ -19,6 +20,8 @@ export const handleError = (error: any) => {
       window.history.pushState({}, "LoginPage", "/login")
     } else if (err) {
       toast.warning(err?.data)
+    } else {
+      toast.warning(error.message)
     }
   }
 }

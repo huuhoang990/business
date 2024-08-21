@@ -39,6 +39,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors, isValid, touchedFields },
   } = useForm<RegisterForm>({ resolver: yupResolver(validation) });
 
@@ -53,6 +54,10 @@ const Register = () => {
     }
 
     fetchProvices()
+
+    return () => {
+      // any cleanup logic if needed
+    }
   }, [])
 
   const getValidOrInvalidClass = (fieldName: keyof RegisterForm) => {
@@ -66,8 +71,8 @@ const Register = () => {
     return '';
   };
 
-  const handleBlur = (fieldName: string) => {
-    trigger(fieldName);
+  const handleBlur = (field: keyof RegisterForm) => {
+    trigger(field)
   };
 
   return (
@@ -88,9 +93,12 @@ const Register = () => {
                       <input
                         type="text"
                         id="emailAddress"
-                        onBlur={handleBlur('email')}
                         className={`form-control form-control-lg ${getValidOrInvalidClass('email')}`}
-                        {...register("email")} />
+                        {...register("email", {
+                          onBlur: () => {
+                            trigger('email');
+                          }
+                        })} />
                         { errors.email ? <p className="invalid-feedback">{ errors.email.message }</p> : "" }
                     </div>
                   </div>
@@ -100,8 +108,12 @@ const Register = () => {
                       <input
                         type="text"
                         id="passsword"
-                        className={`form-control form-control-lg ${errors.password ? 'is-invalid' : 'is-valid'}`}
-                        {...register("password")} />
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('password')}`}
+                        {...register("password", {
+                          onBlur: () => {
+                            trigger('password');
+                          }
+                        })} />
                       { errors.password ? <p className="invalid-feedback">{ errors.password.message }</p> : "" }
                     </div>
                   </div>
@@ -113,9 +125,14 @@ const Register = () => {
                       <input
                         type="text"
                         id="firstName"
-                        className={`form-control form-control-lg ${errors.firstName ? 'is-invalid' : 'is-valid'}`}
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('firstName')}`}
                         value={formState.firstName}
-                        {...register("firstName")} />
+                        {...register("firstName", {
+                          onBlur: () => {
+                            trigger('firstName');
+                          }
+                        })}
+                      />
                         { errors.firstName ? <p className="invalid-feedback">{ errors.firstName.message }</p> : "" }
                     </div>
                   </div>
@@ -125,8 +142,12 @@ const Register = () => {
                       <input
                       type="text"
                       id="lastName"
-                      className={`form-control form-control-lg ${errors.lastName ? 'is-invalid' : 'is-valid'}`}
-                      {...register("lastName")} />
+                      className={`form-control form-control-lg ${getValidOrInvalidClass('lastName')}`}
+                      {...register("lastName", {
+                        onBlur: () => {
+                          trigger('lastName');
+                        }
+                      })} />
                       { errors.lastName ? <p className="invalid-feedback">{ errors.lastName.message }</p> : "" }
                     </div>
                   </div>
@@ -137,9 +158,13 @@ const Register = () => {
                       <label htmlFor="birthday" className="form-label">Birthday</label>
                       <input
                         type="date"
-                        className={`form-control form-control-lg ${errors.birthday ? 'is-invalid' : 'is-valid'}`}
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('birthday')}`}
                         id="birthday"
-                        {...register("birthday")}
+                        {...register("birthday", {
+                          onBlur: () => {
+                            trigger('birthday');
+                          }
+                        })}
                       />
                         { errors.birthday ? <p className="invalid-feedback">{ errors.birthday.message }</p> : "" }
                     </div>
@@ -150,30 +175,42 @@ const Register = () => {
                       <div className="form-check form-check-inline">
                         <input
                           type="radio"
-                          className={`form-check-input ${errors.birthday ? 'is-invalid' : 'is-valid'}`}
+                          className={`form-check-input ${getValidOrInvalidClass('genderId')}`}
                           id="femaleGender"
                           value="2"
-                          {...register("genderId")}
+                          {...register("genderId", {
+                            onBlur: () => {
+                              trigger('genderId');
+                            }
+                          })}
                         />
                         <label className="form-check-label" htmlFor="femaleGender">Female</label>
                       </div>
                       <div className="form-check form-check-inline">
                         <input
                           type="radio"
-                          className={`form-check-input ${errors.birthday ? 'is-invalid' : 'is-valid'}`}
+                          className={`form-check-input ${getValidOrInvalidClass('genderId')}`}
                           id="maleGender"
                           value="1"
-                          {...register("genderId")}
+                          {...register("genderId", {
+                            onBlur: () => {
+                              trigger('genderId');
+                            }
+                          })}
                         />
                         <label className="form-check-label" htmlFor="maleGender">Male</label>
                       </div>
                       <div className="form-check form-check-inline">
                         <input
                           type="radio"
-                          className={`form-check-input ${errors.birthday ? 'is-invalid' : 'is-valid'}`}
+                          className={`form-check-input ${getValidOrInvalidClass('genderId')}`}
                           id="otherGender"
                           value="3"
-                          {...register("genderId")}
+                          {...register("genderId", {
+                            onBlur: () => {
+                              trigger('genderId');
+                            }
+                          })}
                         />
                         <label className="form-check-label" htmlFor="otherGender">Other</label>
                       </div>
@@ -188,8 +225,12 @@ const Register = () => {
                       <input
                         type="tel"
                         id="phoneNumber"
-                        className={`form-control form-control-lg ${errors.phoneNumber ? 'is-invalid' : 'is-valid'}`}
-                        {...register("phoneNumber")}
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('phoneNumber')}`}
+                        {...register("phoneNumber", {
+                          onBlur: () => {
+                            trigger('phoneNumber');
+                          }
+                        })}
                       />
                       { errors.phoneNumber ? <p className="invalid-feedback">{ errors.phoneNumber.message }</p> : "" }
                     </div>
@@ -198,13 +239,14 @@ const Register = () => {
                     <div className="form-outline">
                       <label className="form-label select-label">City</label>
                       <select
-                        className={`select form-select form-select-lg ${errors.phoneNumber ? 'is-invalid' : 'is-valid'}`}
+                        className={`select form-select form-select-lg ${getValidOrInvalidClass('provinceId')}`}
                         value={formState.provinceId}
-                        {...register("provinceId")}>
+                        {...register("provinceId", {
+                          onBlur: () => {
+                            trigger('provinceId');
+                          }
+                        })}>
                         <option value="" disabled>Select your city</option>
-                        {provinceList.map(province => (
-                          <option key={province.id} value={province.id}>{province.name}</option>
-                        ))}
                       </select>
                     </div>
                     { errors.provinceId ? <p className="invalid-feedback">{ errors.provinceId.message }</p> : "" }
@@ -215,8 +257,12 @@ const Register = () => {
                     <div className="form-outline">
                       <label className="form-label select-label">District</label>
                       <select
-                        className={`select form-select form-select-lg ${errors.phoneNumber ? 'is-invalid' : 'is-valid'}`}
-                        {...register("districtId")}
+                        className={`select form-select form-select-lg ${getValidOrInvalidClass('districtId')}`}
+                        {...register("districtId", {
+                          onBlur: () => {
+                            trigger('districtId');
+                          }
+                        })}
                       >
                         <option value="1" disabled>Choose option</option>
                         <option value="2">Subject 1</option>
@@ -230,8 +276,12 @@ const Register = () => {
                     <div className="form-outline">
                       <label className="form-label select-label">Ward</label>
                       <select
-                        className={`select form-select form-select-lg ${errors.phoneNumber ? 'is-invalid' : 'is-valid'}`}
-                        {...register("wardId")}
+                        className={`select form-select form-select-lg ${getValidOrInvalidClass('wardId')}`}
+                        {...register("wardId", {
+                          onBlur: () => {
+                            trigger('wardId');
+                          }
+                        })}
                       >
                         <option value="1" disabled>Choose option</option>
                         <option value="2">Subject 1</option>
@@ -249,8 +299,12 @@ const Register = () => {
                       <input
                         type="text"
                         id="street"
-                        className={`form-control form-control-lg ${errors.street ? 'is-invalid' : 'is-valid'}`}
-                        {...register("street")} />
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('street')}`}
+                        {...register("street", {
+                          onBlur: () => {
+                            trigger('street')
+                          }
+                        })} />
                       { errors.street ? <p className="invalid-feedback">{ errors.street.message }</p> : "" }
                     </div>
                   </div>
