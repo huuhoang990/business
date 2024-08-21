@@ -14,6 +14,10 @@ class District extends Model
         // Add other relevant fields here
     ];
 
+    protected $casts = [
+        'id' => 'string',
+    ];
+
     public function province()
     {
         return $this->belongsTo(Province::class, 'province_code');
