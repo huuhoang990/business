@@ -3,8 +3,10 @@ import { useEffect, useState } from "react"
 import { Province } from "@/Types/Province"
 import { RegisterForm } from "@/Types/Forms/RegisterForm"
 import * as Yup from "yup"
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { useDispatch } from 'react-redux'
+import { showLoading, hideLoading } from '@/Store/loadingSlice'
 
 const validation = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email format"),
@@ -21,8 +23,9 @@ const validation = Yup.object().shape({
 })
 
 const Register = () => {
+  const dispatch = useDispatch();
   const [provinceList, setProvinceList] = useState<Province[]>([]);
-  const [formState, setFormState] = useState<RegisterForm>({
+  const [formState] = useState<RegisterForm>({
     email: '',
     password: '',
     firstName: '',
@@ -49,15 +52,15 @@ const Register = () => {
 
   useEffect(() => {
     const fetchProvices = async () => {
-      const data = await getProvincesApi()
-      setProvinceList(data)
+      dispatch(showLoading());
+      try {
+        const data = await getProvincesApi()
+        setProvinceList(data)
+      } finally {
+        dispatch(hideLoading());
+      }
     }
-
     fetchProvices()
-
-    return () => {
-      // any cleanup logic if needed
-    }
   }, [])
 
   const getValidOrInvalidClass = (fieldName: keyof RegisterForm) => {
@@ -69,10 +72,6 @@ const Register = () => {
       }
     }
     return '';
-  };
-
-  const handleBlur = (field: keyof RegisterForm) => {
-    trigger(field)
   };
 
   return (
@@ -240,13 +239,18 @@ const Register = () => {
                       <label className="form-label select-label">City</label>
                       <select
                         className={`select form-select form-select-lg ${getValidOrInvalidClass('provinceId')}`}
-                        value={formState.provinceId}
                         {...register("provinceId", {
                           onBlur: () => {
                             trigger('provinceId');
+                          },
+                          onChange: (event) => {
+                            console.log(event.target.value)
                           }
                         })}>
                         <option value="" disabled>Select your city</option>
+                        {provinceList.map(province => (
+                          <option key={province.id} value={province.id}>{province.name}</option>
+                        ))}
                       </select>
                     </div>
                     { errors.provinceId ? <p className="invalid-feedback">{ errors.provinceId.message }</p> : "" }

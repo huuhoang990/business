@@ -4,8 +4,7 @@ import { AccessToken } from "@/Types/Auth"
 import { ProvinceResponse, Province } from "@/Types/Province"
 import { RegisterForm } from "@/Types/Forms/RegisterForm"
 
-// const api = process.env.API_URL + "/api";
-const api = "http://aaaa.com/api";
+const api = process.env.API_URL + "/api";
 
 export const registerUserApi = async (form: RegisterForm) => {
   try {
