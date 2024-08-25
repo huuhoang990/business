@@ -183,7 +183,7 @@ const Register = () => {
                     <div className="form-outline">
                       <label className="form-label" htmlFor="password">Passsword</label>
                       <input
-                        type="text"
+                        type="password"
                         id="passsword"
                         className={`form-control form-control-lg ${getValidOrInvalidClass('password')}`}
                         {...register("password", {
