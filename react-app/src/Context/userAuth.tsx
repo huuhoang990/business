@@ -1,4 +1,4 @@
-import { UserProfile } from "@/Types/User"
+import { User } from "@/Types/User"
 import { loginApi/*, registerApi*/ } from "@/Service/AuthService"
 import axios from "axios"
 import React, { createContext, useEffect, useState } from "react"
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 type UserContextType = {
-  user: UserProfile | null
+  user: User | null
   token: string | null
   // registerUser: (email: string, userName: string, password: string) => void
   loginUser: (userName: string, password: string) => void
@@ -21,13 +21,13 @@ const UserContext = createContext<UserContextType>({} as UserContextType)
 export const UserProvider = ({ children }: Props) => {
   const navigate = useNavigate()
   const [token, setToken] = useState<string | null>(null)
-  const [user, setUser] = useState<UserProfile | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     const user = localStorage.getItem("user")
     const token = localStorage.getItem("token")
-
+    console.log(token)
     if (user && token) {
       setUser(JSON.parse(user))
       setToken(token)
@@ -64,13 +64,15 @@ export const UserProvider = ({ children }: Props) => {
   ) => {
     await loginApi(userName, password).then((res: any) => {
       if (res) {
-        localStorage.setItem("token", res?.data.token)
+        console.log("res 111")
+        console.log(res)
+        localStorage.setItem("token", res?.data.access_token)
         const userObj = {
           userName: res?.data.userName,
           email: res?.data.email
         }
         localStorage.setItem("user", JSON.stringify(userObj))
-        setToken(res?.data.token!)
+        setToken(res?.data.access_token!)
         setUser(userObj!)
         toast.success("Login Success!")
         navigate("/")

@@ -14,11 +14,17 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: (
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        )
+        element: <TwoColumnContentLayout></TwoColumnContentLayout>, 
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            )
+          },
+        ]
       },
       {
         path: '/register',

@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'api', 'prefix' => 'user'], function () {
     Route::get('profile', [UserController::class, 'profile']);
-    Route::post('register', [UserController::class, 'register']);
 });
 
 Route::group([
@@ -27,7 +26,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
-    // Route::get('profile', [AuthController::class, 'profile']);
+    Route::get('profile', [AuthController::class, 'profile']);
 
     /*
     Route::post('logout', 'AuthController@logout');
@@ -44,6 +43,8 @@ Route::group([
     Route::get('district/{id}', [RegisterController::class, 'getDistByPCode']);
     Route::get('districts', [RegisterController::class, 'getAllDistricts']);
     Route::get('ward/{id}', [RegisterController::class, 'getWardByDCode']);
+    Route::post('register', [RegisterController::class, 'register']);
+
     // Route::get('wards', [RegisterController::class, 'getAllProvinces']);
     /*
     Route::post('logout', 'AuthController@logout');

@@ -95,10 +95,12 @@ class RegisterController extends Controller
         $province = Province::where('id', $province_code)->firstOrFail();
 
         // Retrieve districts for the province
-        $districts = $province->districts()->select('id', 'province_code', 'name')->get();
+        $districts = $province->districts()->select('id', 'province_code as provinceId', 'name_en as name')->get();
 
         // Return the districts as a JSON response
-        return response()->json($districts);
+        return response()->json([
+            'data' => $districts
+        ], 200)->header('Content-Type', "application/json;charset=UTF-8");
     }
 
     // Get wards by district_code
@@ -115,7 +117,7 @@ class RegisterController extends Controller
 
         // Retrieve wards by the provided district_code
         $wards = Ward::where('district_code', $dist_code)
-        ->select('id', 'full_name', 'code_name', 'district_code')
+        ->select('id', 'name_en as name', 'code_name', 'district_code')
         ->get();
 
         // Check if any wards were found
@@ -124,10 +126,13 @@ class RegisterController extends Controller
         }
 
         // Return the wards as a JSON response
-        return response()->json($wards);
+        return response()->json([
+            'data' => $wards
+        ], 200)->header('Content-Type', "application/json;charset=UTF-8");
     }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         DB::beginTransaction();
 
         try {
@@ -138,21 +143,21 @@ class RegisterController extends Controller
 
             UserProfile::create([
                 'user_id' => $user->id,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
                 'birthday' => $request->birthday,
-                'address' => $request->address,
-                'ward_id' => $request->ward_id,
-                'district_id' => $request->district_id,
-                'province_id' => $request->province_id,
+                'address' => $request->street,
+                'ward_id' => $request->wardId,
+                'district_id' => $request->districtId,
+                'province_id' => $request->provinceId,
             ]);
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500)->header('Content-Type', "application/json;charset=UTF-8");
         }
 
-        return response()->json(['message' => 'Registration successful'], 201);
+        return response()->json(['message' => 'Registration successful'], 200)->header('Content-Type', "application/json;charset=UTF-8");
     }
 }

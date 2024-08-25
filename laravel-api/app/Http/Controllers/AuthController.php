@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\UserProfile;
+use Illuminate\Support\Facades\Auth;
+
 class AuthController extends Controller
 {
     public function __construct()
@@ -31,7 +34,19 @@ class AuthController extends Controller
      */
     public function profile()
     {
-        return response()->json(auth()->user());
+        $user = Auth::user();
+        $profile = UserProfile::from('user_profiles AS up')
+            ->where('up.user_id', $user['id'])
+            ->select('us.email', 'up.first_name as firstName', 'up.last_name as lastName', 'up.birthday', 'up.address', 'pr.name_en as city', 'di.name_en as district', 'wa.name_en as ward')
+            ->join('users AS us', 'us.id', '=', 'up.user_id')
+            ->join('provinces AS pr', 'pr.id', '=', 'up.province_id')
+            ->join('districts AS di', 'di.id', '=', 'up.district_id')
+            ->join('wards AS wa', 'wa.id', '=', 'up.ward_id')
+            ->first();
+
+        return response()->json([
+            'data' => $profile
+        ]);
     }
 
     /**

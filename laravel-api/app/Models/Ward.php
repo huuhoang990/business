@@ -13,4 +13,8 @@ class Ward extends Model
         'name',
         // Add other relevant fields here
     ];
+
+    protected $casts = [
+        'id' => 'string',
+    ];
 }

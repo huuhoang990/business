@@ -1,16 +1,25 @@
-import { registerUserApi, getProvincesApi } from "@/Service/RegisterService"
+import { registerUserApi, getProvincesApi, getDistrictByProvinceIdApi, getWardByDistrictIdApi } from "@/Service/RegisterService"
 import { useEffect, useState } from "react"
 import { Province } from "@/Types/Province"
+import { District } from "@/Types/District"
+import { Ward } from "@/Types/Ward"
 import { RegisterForm } from "@/Types/Forms/RegisterForm"
 import * as Yup from "yup"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useDispatch } from 'react-redux'
 import { showLoading, hideLoading } from '@/Store/loadingSlice'
+import { useNavigate } from "react-router-dom"
 
 const validation = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email format"),
-  password: Yup.string().required("Password is required"),
+  password: Yup.string().required("Password is required")
+    .min(8, 'Password must contain at least 8 character')
+    .max(20, 'Password cannot exceed 20 characters')
+    .matches(/[0-9]/, 'Password requires a number')
+    .matches(/[a-z]/, 'Password requires a lowercase letter')
+    .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    .matches(/[^\w]/, 'Password requires a symbol'),
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
   birthday: Yup.string().required("Birthday name is required"),
@@ -23,8 +32,12 @@ const validation = Yup.object().shape({
 })
 
 const Register = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
-  const [provinceList, setProvinceList] = useState<Province[]>([]);
+  const [provinceList, setProvinceList] = useState<Province[]>([])
+  const [districtList, setDistrictList] = useState<District[]>([])
+  const [wardList, setWardList] = useState<Ward[]>([])
+
   const [formState] = useState<RegisterForm>({
     email: '',
     password: '',
@@ -47,7 +60,13 @@ const Register = () => {
   } = useForm<RegisterForm>({ resolver: yupResolver(validation) });
 
   const handleRegister = async (form: RegisterForm) => {
-    await registerUserApi(form)
+    dispatch(showLoading());
+    try {
+      await registerUserApi(form)
+      navigate("/login")
+    } finally {
+      dispatch(hideLoading());
+    }
   }
 
   useEffect(() => {
@@ -73,6 +92,65 @@ const Register = () => {
     }
     return '';
   };
+
+  const fetchDistrictsByProviceId = async (provinceId: string) => {
+    dispatch(showLoading());
+    try {
+      const data = await getDistrictByProvinceIdApi(provinceId)
+      setDistrictList(data)
+    } finally {
+      dispatch(hideLoading());
+    }
+  }
+
+  const fetchWardsByDistrictId = async (districtId: string) => {
+    dispatch(showLoading());
+    try {
+      const data = await getWardByDistrictIdApi(districtId)
+      setWardList(data)
+    } finally {
+      dispatch(hideLoading());
+    }
+  }
+
+  const renderProvinceOptions = () : JSX.Element[] => {
+    const listProvinceRender: JSX.Element[] = []
+
+    provinceList.forEach(province => {
+      listProvinceRender.push(
+        <option key={province.id} value={province.id}>
+          {province.name}
+        </option>
+      );
+    })
+    return listProvinceRender
+  }
+
+  const renderDistrictOptions = () : JSX.Element[] => {
+    const listDistrictRender: JSX.Element[] = []
+
+    districtList.forEach(district => {
+      listDistrictRender.push(
+        <option key={district.id} value={district.id}>
+          {district.name}
+        </option>
+      );
+    })
+    return listDistrictRender
+  }
+
+  const renderWardOptions = () : JSX.Element[] => {
+    const listWardRender: JSX.Element[] = []
+
+    wardList.forEach(ward => {
+      listWardRender.push(
+        <option key={ward.id} value={ward.id}>
+          {ward.name}
+        </option>
+      );
+    })
+    return listWardRender
+  }
 
   return (
     <div id="inner-content" className="my-5 w-100 justify-content-center align-self-center">
@@ -125,7 +203,6 @@ const Register = () => {
                         type="text"
                         id="firstName"
                         className={`form-control form-control-lg ${getValidOrInvalidClass('firstName')}`}
-                        value={formState.firstName}
                         {...register("firstName", {
                           onBlur: () => {
                             trigger('firstName');
@@ -244,13 +321,11 @@ const Register = () => {
                             trigger('provinceId');
                           },
                           onChange: (event) => {
-                            console.log(event.target.value)
+                            fetchDistrictsByProviceId(event.target.value)
                           }
                         })}>
-                        <option value="" disabled>Select your city</option>
-                        {provinceList.map(province => (
-                          <option key={province.id} value={province.id}>{province.name}</option>
-                        ))}
+                        <option value="" disabled selected>Select your city</option>
+                        {provinceList.length > 0 ? renderProvinceOptions() : null}
                       </select>
                     </div>
                     { errors.provinceId ? <p className="invalid-feedback">{ errors.provinceId.message }</p> : "" }
@@ -265,13 +340,14 @@ const Register = () => {
                         {...register("districtId", {
                           onBlur: () => {
                             trigger('districtId');
+                          },
+                          onChange: (event) => {
+                            fetchWardsByDistrictId(event.target.value)
                           }
                         })}
                       >
-                        <option value="1" disabled>Choose option</option>
-                        <option value="2">Subject 1</option>
-                        <option value="3">Subject 2</option>
-                        <option value="4">Subject 3</option>
+                        <option value="" disabled selected>Select your city</option>
+                        {districtList.length > 0 ? renderDistrictOptions() : null}
                       </select>
                       { errors.districtId ? <p className="invalid-feedback">{ errors.districtId.message }</p> : "" }
                     </div>
@@ -287,10 +363,8 @@ const Register = () => {
                           }
                         })}
                       >
-                        <option value="1" disabled>Choose option</option>
-                        <option value="2">Subject 1</option>
-                        <option value="3">Subject 2</option>
-                        <option value="4">Subject 3</option>
+                        <option value="" disabled selected>Choose option</option>
+                        {wardList.length > 0 ? renderWardOptions() : null}
                       </select>
                       { errors.wardId ? <p className="invalid-feedback">{ errors.wardId.message }</p> : "" }
                     </div>
@@ -314,7 +388,7 @@ const Register = () => {
                   </div>
                 </div>
                 <div className="mt-4 pt-2 d-flex align-items-center justify-content-between">
-                  <input data-mdb-ripple-init className="btn btn-primary btn-lg" type="submit" value="Submit" />
+                  <input className="btn btn-primary btn-lg" type="submit" value="Submit" />
                   <div className="d-inline-flex">
                     <p className="m-0">Already have an account?</p>
                     <a className="ms-lg-1" href="login.html">Login</a>
