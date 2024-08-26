@@ -1,7 +1,6 @@
 export type District = {
   id: string,
-  name: string,
-  provinceId: string
+  name: string
 }
 
 export type DistrictResponse = {

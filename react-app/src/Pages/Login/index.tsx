@@ -13,10 +13,26 @@ const validation = Yup.object().shape({
 
 const Login = () => {
   const { loginUser } = useAuth();
-  const { register, handleSubmit, formState: { errors, isValid }} = useForm<LoginForm>({ resolver: yupResolver(validation) })
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    formState: { errors, isValid, touchedFields, submitCount }
+  } = useForm<LoginForm>({ resolver: yupResolver(validation) })
 
   const handleLogin = (form: LoginForm) => {
     loginUser(form.email, form.password)
+  }
+
+  const getValidOrInvalidClass = (fieldName: keyof LoginForm) => {
+    if (touchedFields[fieldName] || submitCount > 0) {
+      if (errors[fieldName]) {
+        return 'is-invalid';
+      } else {
+        return 'is-valid';
+      }
+    }
+    return '';
   }
 
   return (
@@ -33,14 +49,18 @@ const Login = () => {
                 <div className="row mt-4">
                   <div className="col-12">
                     <div className="form-outline">
-                      <label className="form-label" htmlFor="userName">Username</label>
+                      <label className="form-label" htmlFor="email">email</label>
                       <input
                         type="text"
-                        id="userName"
-                        className="form-control form-control-lg"
-                        {...register("email")}
+                        id="email"
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('email')}`}
+                        {...register("email", {
+                          onBlur: () => {
+                            trigger('email');
+                          }
+                        })}
                       />
-                      { errors.email ? <p className="invalid-feedback">{ errors.email.message }</p> : "" }
+                      { errors.email ? <p id="email_error" className="invalid-feedback">{ errors.email.message }</p> : "" }
                     </div>
                   </div>
                 </div>
@@ -49,18 +69,22 @@ const Login = () => {
                     <div className="form-outline">
                       <label className="form-label" htmlFor="password">Password</label>
                       <input
-                        type="text"
+                        type="password"
                         id="password"
-                        className="form-control form-control-lg"
-                        {...register("password")}
+                        className={`form-control form-control-lg ${getValidOrInvalidClass('password')}`}
+                        {...register("password", {
+                          onBlur: () => {
+                            trigger('password');
+                          }
+                        })}
                       />
-                      { errors.password ? <p>{ errors.password.message }</p> : "" }
+                      { errors.password ? <p id="password_error" className="invalid-feedback">{ errors.password.message }</p> : "" }
                     </div>
                   </div>
                 </div>
                 <div className="row mt-4">
                   <div className="col-12">
-                    <input data-mdb-ripple-init className="btn btn-primary btn-lg" type="submit" value="Submit" />
+                    <input id="submit" className="btn btn-primary btn-lg" type="submit" value="Submit" />
                     <p className="mt-1">Don't have an account? <a className="ms-lg-1" href="login.html">Sign up</a></p>
                   </div>
                 </div>
