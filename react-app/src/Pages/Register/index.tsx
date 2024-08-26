@@ -56,7 +56,7 @@ const Register = () => {
     register,
     handleSubmit,
     trigger,
-    formState: { errors, isValid, touchedFields },
+    formState: { errors, isValid, touchedFields, submitCount },
   } = useForm<RegisterForm>({ resolver: yupResolver(validation) });
 
   const handleRegister = async (form: RegisterForm) => {
@@ -83,7 +83,7 @@ const Register = () => {
   }, [])
 
   const getValidOrInvalidClass = (fieldName: keyof RegisterForm) => {
-    if (touchedFields[fieldName]) {
+    if (touchedFields[fieldName] || submitCount > 0) {
       if (errors[fieldName]) {
         return 'is-invalid';
       } else {
@@ -327,8 +327,8 @@ const Register = () => {
                         <option value="" disabled selected>Select your city</option>
                         {provinceList.length > 0 ? renderProvinceOptions() : null}
                       </select>
+                      { errors.provinceId ? <p className="invalid-feedback">{ errors.provinceId.message }</p> : "" }
                     </div>
-                    { errors.provinceId ? <p className="invalid-feedback">{ errors.provinceId.message }</p> : "" }
                   </div>
                 </div>
                 <div className="row mt-4">
@@ -346,7 +346,7 @@ const Register = () => {
                           }
                         })}
                       >
-                        <option value="" disabled selected>Select your city</option>
+                        <option value="" disabled selected>Select your district</option>
                         {districtList.length > 0 ? renderDistrictOptions() : null}
                       </select>
                       { errors.districtId ? <p className="invalid-feedback">{ errors.districtId.message }</p> : "" }
@@ -363,7 +363,7 @@ const Register = () => {
                           }
                         })}
                       >
-                        <option value="" disabled selected>Choose option</option>
+                        <option value="" disabled selected>Select your ward</option>
                         {wardList.length > 0 ? renderWardOptions() : null}
                       </select>
                       { errors.wardId ? <p className="invalid-feedback">{ errors.wardId.message }</p> : "" }
