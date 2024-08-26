@@ -169,7 +169,7 @@ const Register = () => {
                       <label className="form-label" htmlFor="emailAddress">Email</label>
                       <input
                         type="text"
-                        id="emailAddress"
+                        id="email"
                         className={`form-control form-control-lg ${getValidOrInvalidClass('email')}`}
                         {...register("email", {
                           onBlur: () => {
@@ -184,7 +184,7 @@ const Register = () => {
                       <label className="form-label" htmlFor="password">Passsword</label>
                       <input
                         type="text"
-                        id="passsword"
+                        id="password"
                         className={`form-control form-control-lg ${getValidOrInvalidClass('password')}`}
                         {...register("password", {
                           onBlur: () => {
@@ -248,48 +248,42 @@ const Register = () => {
                   <div className="col-6">
                     <div className="form-outline">
                       <h6 className="mb-2 pb-1">Gender: </h6>
-                      <div className="form-check form-check-inline">
-                        <input
-                          type="radio"
-                          className={`form-check-input ${getValidOrInvalidClass('genderId')}`}
-                          id="femaleGender"
-                          value="2"
-                          {...register("genderId", {
-                            onBlur: () => {
-                              trigger('genderId');
-                            }
-                          })}
-                        />
-                        <label className="form-check-label" htmlFor="femaleGender">Female</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input
-                          type="radio"
-                          className={`form-check-input ${getValidOrInvalidClass('genderId')}`}
-                          id="maleGender"
-                          value="1"
-                          {...register("genderId", {
-                            onBlur: () => {
-                              trigger('genderId');
-                            }
-                          })}
-                        />
-                        <label className="form-check-label" htmlFor="maleGender">Male</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input
-                          type="radio"
-                          className={`form-check-input ${getValidOrInvalidClass('genderId')}`}
-                          id="otherGender"
-                          value="3"
-                          {...register("genderId", {
-                            onBlur: () => {
-                              trigger('genderId');
-                            }
-                          })}
-                        />
-                        <label className="form-check-label" htmlFor="otherGender">Other</label>
-                      </div>
+                      <input
+                        type="radio"
+                        className={`form-check-input mr-2 ${getValidOrInvalidClass('genderId')}`}
+                        id="femaleGender"
+                        value="2"
+                        {...register("genderId", {
+                          onBlur: () => {
+                            trigger('genderId');
+                          }
+                        })}
+                      />
+                      <label className="form-check-label mr-7" htmlFor="femaleGender">Female</label>
+                      <input
+                        type="radio"
+                        className={`form-check-input mr-2 ${getValidOrInvalidClass('genderId')}`}
+                        id="maleGender"
+                        value="1"
+                        {...register("genderId", {
+                          onBlur: () => {
+                            trigger('genderId');
+                          }
+                        })}
+                      />
+                      <label className="form-check-label mr-7" htmlFor="maleGender">Male</label>
+                      <input
+                        type="radio"
+                        className={`form-check-input mr-2 ${getValidOrInvalidClass('genderId')}`}
+                        id="otherGender"
+                        value="3"
+                        {...register("genderId", {
+                          onBlur: () => {
+                            trigger('genderId');
+                          }
+                        })}
+                      />
+                      <label className="form-check-label" htmlFor="otherGender">Other</label>
                       { errors.genderId ? <p className="invalid-feedback">{ errors.genderId.message }</p> : "" }
                     </div>
                   </div>
