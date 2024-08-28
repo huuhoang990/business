@@ -36,7 +36,7 @@ const Home = () => {
                   <table className="table">
                     <tr>
                       <th>Email</th>
-                      <td>{userProfile.email}</td>
+                      <td id="email">{userProfile.email}</td>
                     </tr>
                     <tr>
                       <th>First name</th>

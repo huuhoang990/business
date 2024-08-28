@@ -24,7 +24,7 @@ const validation = Yup.object().shape({
   lastName: Yup.string().required("Last name is required"),
   birthday: Yup.string().required("Birthday name is required"),
   genderId: Yup.string().required("Gender is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
+  phoneNumber: Yup.string().required("Phone number is required").matches(/^\d{10}$/, 'Phone number must be exactly 10 digits'),
   provinceId: Yup.string().required("City is required"),
   districtId: Yup.string().required("District is required"),
   wardId: Yup.string().required("Ward is required"),
@@ -158,7 +158,7 @@ const Register = () => {
         <div className="col">
           <div className="card">
             <div className="card-body p-4 p-md-5">
-              <h3 className="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
+              <h3 id="title" className="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
               <form
                 onSubmit={ handleSubmit(handleRegister) }
                 className={`needs-validation ${isValid ? 'was-validated' : ''}`}
@@ -176,14 +176,14 @@ const Register = () => {
                             trigger('email');
                           }
                         })} />
-                        { errors.email ? <p className="invalid-feedback">{ errors.email.message }</p> : "" }
+                        { errors.email ? <p id="email_error" className="invalid-feedback">{ errors.email.message }</p> : "" }
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="form-outline">
                       <label className="form-label" htmlFor="password">Passsword</label>
                       <input
-                        type="text"
+                        type="password"
                         id="password"
                         className={`form-control form-control-lg ${getValidOrInvalidClass('password')}`}
                         {...register("password", {
@@ -191,7 +191,7 @@ const Register = () => {
                             trigger('password');
                           }
                         })} />
-                      { errors.password ? <p className="invalid-feedback">{ errors.password.message }</p> : "" }
+                      { errors.password ? <p id="password_error" className="invalid-feedback">{ errors.password.message }</p> : "" }
                     </div>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ const Register = () => {
                           }
                         })}
                       />
-                        { errors.firstName ? <p className="invalid-feedback">{ errors.firstName.message }</p> : "" }
+                        { errors.firstName ? <p id="firstName_error" className="invalid-feedback">{ errors.firstName.message }</p> : "" }
                     </div>
                   </div>
                   <div className="col-6">
@@ -224,7 +224,7 @@ const Register = () => {
                           trigger('lastName');
                         }
                       })} />
-                      { errors.lastName ? <p className="invalid-feedback">{ errors.lastName.message }</p> : "" }
+                      { errors.lastName ? <p id="lastName_error" className="invalid-feedback">{ errors.lastName.message }</p> : "" }
                     </div>
                   </div>
                 </div>
@@ -242,7 +242,7 @@ const Register = () => {
                           }
                         })}
                       />
-                        { errors.birthday ? <p className="invalid-feedback">{ errors.birthday.message }</p> : "" }
+                        { errors.birthday ? <p id="birthday_error" className="invalid-feedback">{ errors.birthday.message }</p> : "" }
                     </div>
                   </div>
                   <div className="col-6">
@@ -284,7 +284,7 @@ const Register = () => {
                         })}
                       />
                       <label className="form-check-label" htmlFor="otherGender">Other</label>
-                      { errors.genderId ? <p className="invalid-feedback">{ errors.genderId.message }</p> : "" }
+                      { errors.genderId ? <p id="gender_error" className="invalid-feedback">{ errors.genderId.message }</p> : "" }
                     </div>
                   </div>
                 </div>
@@ -302,13 +302,14 @@ const Register = () => {
                           }
                         })}
                       />
-                      { errors.phoneNumber ? <p className="invalid-feedback">{ errors.phoneNumber.message }</p> : "" }
+                      { errors.phoneNumber ? <p id="phoneNumber_error" className="invalid-feedback">{ errors.phoneNumber.message }</p> : "" }
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="form-outline">
                       <label className="form-label select-label">City</label>
                       <select
+                        id="city"
                         className={`select form-select form-select-lg ${getValidOrInvalidClass('provinceId')}`}
                         {...register("provinceId", {
                           onBlur: () => {
@@ -321,7 +322,7 @@ const Register = () => {
                         <option value="" disabled selected>Select your city</option>
                         {provinceList.length > 0 ? renderProvinceOptions() : null}
                       </select>
-                      { errors.provinceId ? <p className="invalid-feedback">{ errors.provinceId.message }</p> : "" }
+                      { errors.provinceId ? <p id="province_error" className="invalid-feedback">{ errors.provinceId.message }</p> : "" }
                     </div>
                   </div>
                 </div>
@@ -330,6 +331,7 @@ const Register = () => {
                     <div className="form-outline">
                       <label className="form-label select-label">District</label>
                       <select
+                        id="district"
                         className={`select form-select form-select-lg ${getValidOrInvalidClass('districtId')}`}
                         {...register("districtId", {
                           onBlur: () => {
@@ -343,13 +345,14 @@ const Register = () => {
                         <option value="" disabled selected>Select your district</option>
                         {districtList.length > 0 ? renderDistrictOptions() : null}
                       </select>
-                      { errors.districtId ? <p className="invalid-feedback">{ errors.districtId.message }</p> : "" }
+                      { errors.districtId ? <p id="district_error" className="invalid-feedback">{ errors.districtId.message }</p> : "" }
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="form-outline">
                       <label className="form-label select-label">Ward</label>
                       <select
+                        id="ward"
                         className={`select form-select form-select-lg ${getValidOrInvalidClass('wardId')}`}
                         {...register("wardId", {
                           onBlur: () => {
@@ -360,7 +363,7 @@ const Register = () => {
                         <option value="" disabled selected>Select your ward</option>
                         {wardList.length > 0 ? renderWardOptions() : null}
                       </select>
-                      { errors.wardId ? <p className="invalid-feedback">{ errors.wardId.message }</p> : "" }
+                      { errors.wardId ? <p id="ward_error" className="invalid-feedback">{ errors.wardId.message }</p> : "" }
                     </div>
                   </div>
                 </div>
@@ -377,12 +380,12 @@ const Register = () => {
                             trigger('street')
                           }
                         })} />
-                      { errors.street ? <p className="invalid-feedback">{ errors.street.message }</p> : "" }
+                      { errors.street ? <p id="street_error" className="invalid-feedback">{ errors.street.message }</p> : "" }
                     </div>
                   </div>
                 </div>
                 <div className="mt-4 pt-2 d-flex align-items-center justify-content-between">
-                  <input className="btn btn-primary btn-lg" type="submit" value="Submit" />
+                  <input id="submit" className="btn btn-primary btn-lg" type="submit" value="Submit" />
                   <div className="d-inline-flex">
                     <p className="m-0">Already have an account?</p>
                     <a className="ms-lg-1" href="login.html">Login</a>

@@ -36,7 +36,7 @@ const Login = () => {
         <div className="col">
           <div className="card">
             <div className="card-body p-4 p-md-5">
-              <h3 className="mb-4 pb-2 pb-md-0 mb-md-5">Login</h3>
+              <h3 id="title" className="mb-4 pb-2 pb-md-0 mb-md-5">Login</h3>
               <form
                 onSubmit={ handleSubmit(handleLogin) }
                 className={`needs-validation ${isValid ? 'was-validated' : ''}`}
@@ -44,10 +44,10 @@ const Login = () => {
                 <div className="row mt-4">
                   <div className="col-12">
                     <div className="form-outline">
-                      <label className="form-label" htmlFor="userName">Email</label>
+                      <label className="form-label" htmlFor="email">Email</label>
                       <input
                         type="text"
-                        id="userName"
+                        id="email"
                         className={`form-control form-control-lg ${getValidOrInvalidClass('email')}`}
                         {...register("email", {
                           onBlur: () => {

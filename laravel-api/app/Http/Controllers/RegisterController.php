@@ -146,6 +146,7 @@ class RegisterController extends Controller
                 'first_name' => $request->firstName,
                 'last_name' => $request->lastName,
                 'birthday' => $request->birthday,
+                'gender_id' => $request->genderId,
                 'address' => $request->street,
                 'ward_id' => $request->wardId,
                 'district_id' => $request->districtId,

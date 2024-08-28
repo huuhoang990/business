@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('first_name', 100);
             $table->string('last_name', 100);
             $table->date('birthday');
-            $table->string('address', 255);
-            $table->string('ward_id', 20);
-            $table->string('district_id', 20);
+            $table->string('gender_id', 20);
             $table->string('province_id', 20);
+            $table->string('district_id', 20);
+            $table->string('ward_id', 20);
+            $table->string('address', 255);
             $table->timestamps(); // Equivalent to `created_at` and `updated_at`
             $table->softDeletes(); // Equivalent to `deleted_at`
             // Adding foreign key constraints
