@@ -48,7 +48,7 @@ services:
             - /react-app/node_modules
         depends_on:
             - laravel
-        command: npm run dev # run the project to live
+        command: sh -c "yarn install && yarn dev"
 
 volumes:
     mysql_data:
