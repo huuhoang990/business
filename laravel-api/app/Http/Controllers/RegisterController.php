@@ -2,24 +2,23 @@
 namespace App\Http\Controllers;
 use App\Models\Province;
 use App\Models\District;
-use App\Models\User;
-use App\Models\UserProfile;
 use App\Models\Ward;
 use Illuminate\Http\Request;
 use App\Rules\IdValidator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Services\RegistrationService;
 
 class RegisterController extends Controller
 {
+    protected $registrationService;
 
+    public function __construct(RegistrationService $registrationService)
+    {
+        $this->registrationService = $registrationService;
+    }
     public function getAllProvinces()
     {
-        // Specify the columns you want to retrieve
-        $columns = ['id', 'name_en AS name'];
-
         // Retrieve the province with the specified columns
-        $provinces = Province::select($columns)->get();
+        $provinces = Province::getProvinces();
 
         // Return provinces as a JSON response
         return response()->json([
@@ -44,11 +43,7 @@ class RegisterController extends Controller
             ], 400);
         }
 
-        // Specify the columns you want to retrieve
-        $columns = ['id', 'full_name', 'code_name']; // replace with your desired columns
-
-        // Retrieve the province with the specified columns
-        $province = Province::select($columns)->find($id);
+        $province = Province::getProvinces();
         // Check if the province exists
         if ($province) {
             // Return the province data as a JSON response
@@ -64,20 +59,6 @@ class RegisterController extends Controller
             ], 404);
         }
     }
-    public function getAllDistricts()
-    {
-        // Specify the columns you want to retrieve
-        $columns = ['id', 'full_name', 'code_name'];
-
-        // Retrieve the province with the specified columns
-        $districts = District::select($columns)->get();
-
-        // Return provinces as a JSON response
-        return response()->json([
-            'success' => true,
-            'data' => $districts
-        ], 200);
-    }
 
     // Get districts by province_code
     public function getDistByPCode($province_code)
@@ -91,11 +72,8 @@ class RegisterController extends Controller
             return response()->json(['message' => $validator->errors()->first()], 400);
         }
 
-        // Retrieve the province by the string-based province_code
-        $province = Province::where('id', $province_code)->firstOrFail();
-
         // Retrieve districts for the province
-        $districts = $province->districts()->select('id', 'province_code as provinceId', 'name_en as name')->get();
+        $districts = District::getDistrictsByProvinceCode($province_code);
 
         // Return the districts as a JSON response
         return response()->json([
@@ -116,9 +94,7 @@ class RegisterController extends Controller
         }
 
         // Retrieve wards by the provided district_code
-        $wards = Ward::where('district_code', $dist_code)
-        ->select('id', 'name_en as name', 'code_name', 'district_code')
-        ->get();
+        $wards = Ward::getWardsByDistrictCode($dist_code);
 
         // Check if any wards were found
         if ($wards->isEmpty()) {
@@ -133,30 +109,16 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        DB::beginTransaction();
+        $data = $request->only([
+            'email', 'password', 'firstName', 'lastName', 'birthday',
+            'genderId', 'street', 'wardId', 'districtId', 'provinceId'
+        ]);
 
-        try {
-            $user = User::create([
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+        $result = $this->registrationService->register($data);
 
-            UserProfile::create([
-                'user_id' => $user->id,
-                'first_name' => $request->firstName,
-                'last_name' => $request->lastName,
-                'birthday' => $request->birthday,
-                'gender_id' => $request->genderId,
-                'address' => $request->street,
-                'ward_id' => $request->wardId,
-                'district_id' => $request->districtId,
-                'province_id' => $request->provinceId,
-            ]);
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500)->header('Content-Type', "application/json;charset=UTF-8");
+        if ($result['success']) {
+            return response()->json(['message' => 'Registration successful'], 200)
+                ->header('Content-Type', "application/json;charset=UTF-8");
         }
 
         return response()->json(['message' => 'Registration successful'], 200)->header('Content-Type', "application/json;charset=UTF-8");
