@@ -17,4 +17,9 @@ class Ward extends Model
     protected $casts = [
         'id' => 'string',
     ];
+
+    public static function getWardsByDistrictCode($districtCode)
+    {
+        return self::select('id', 'name_en as name', 'code_name', 'district_code')->where('district_code', $districtCode)->get();
+    }
 }

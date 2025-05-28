@@ -22,4 +22,10 @@ class District extends Model
     {
         return $this->belongsTo(Province::class, 'province_code');
     }
+
+    public static function getDistrictsByProvinceCode($provinceCode) {
+        return self::where('province_code', $provinceCode)
+            ->select('id', 'name_en as name', 'code_name', 'province_code')
+            ->get();
+    }
 }
